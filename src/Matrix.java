@@ -183,36 +183,46 @@ public class Matrix {
         gauss_matrix.array = gauss(gauss_matrix).array;
 
         if (this.search_rank(this) == this.search_rank(gauss_matrix) && this.search_rank(this) == this.colsCount) {
-            for (int i = gauss_matrix.rowsCount - 1; i >= 0 ; i--) {
-                for (int k = i - 1; k >= 0; k--) {
-                    double coef = -(gauss_matrix.array[k][i] / gauss_matrix.array[i][i]);
-
-                    // Чтоб не было много чисел после точки
-                    if (coef % 2 != 1 && coef % 2 != 0) {
-                        double temp = gauss_matrix.array[i][i];
-                        for (int j = 0; j < gauss_matrix.colsCount; j++) {
-                            gauss_matrix.array[i][j] *= gauss_matrix.array[k][i];
-                        }
-                        for (int j = 0; j < gauss_matrix.colsCount; j++) {
-                            gauss_matrix.array[k][j] *= temp;
-                        }
-                        coef = -(gauss_matrix.array[k][i] / gauss_matrix.array[i][i]);
-                    }
-
-                    for (int j = gauss_matrix.colsCount - 1; j >= 0; j--) {
-                        if (i == j) {
-                            gauss_matrix.array[k][j] = 0;
-                        } else {
-                            gauss_matrix.array[k][j] += coef * gauss_matrix.array[i][j];
-                        }
-                    }
-                }
-            }
+//            for (int i = gauss_matrix.rowsCount - 1; i >= 0 ; i--) {
+//                for (int k = i - 1; k >= 0; k--) {
+//                    double coef = -(gauss_matrix.array[k][i] / gauss_matrix.array[i][i]);
+//
+//                    // Чтоб не было много чисел после точки
+//                    if (coef % 2 != 1 && coef % 2 != 0) {
+//                        double temp = gauss_matrix.array[i][i];
+//                        for (int j = 0; j < gauss_matrix.colsCount; j++) {
+//                            gauss_matrix.array[i][j] *= gauss_matrix.array[k][i];
+//                        }
+//                        for (int j = 0; j < gauss_matrix.colsCount; j++) {
+//                            gauss_matrix.array[k][j] *= temp;
+//                        }
+//                        coef = -(gauss_matrix.array[k][i] / gauss_matrix.array[i][i]);
+//                    }
+//
+//                    for (int j = gauss_matrix.colsCount - 1; j >= 0; j--) {
+//                        if (i == j) {
+//                            gauss_matrix.array[k][j] = 0;
+//                        } else {
+//                            gauss_matrix.array[k][j] += coef * gauss_matrix.array[i][j];
+//                        }
+//                    }
+//                }
+//            }
             System.out.println("Одно решение.");
             Matrix m_answer = new Matrix();
             m_answer.rowsCount = gauss_matrix.rowsCount;
             m_answer.colsCount = 1;
             m_answer.array = new double[m_answer.rowsCount][m_answer.colsCount];
+            for (int i = gauss_matrix.rowsCount - 1; i >= 0; i--) {
+                for (int j = gauss_matrix.colsCount - 2; j >= i; j--) {
+                    if (i == j) {
+                        m_answer.array[i][0] = gauss_matrix.array[i][gauss_matrix.colsCount - 1] / gauss_matrix.array[i][i];
+                    } else {
+                        gauss_matrix.array[i][gauss_matrix.colsCount - 1] -= (gauss_matrix.array[i][j] * m_answer.array[j][0]);
+                        gauss_matrix.array[i][j] = 0;
+                    }
+                }
+            }
             for (int i = 0; i < m_answer.rowsCount; i++) {
                 m_answer.array[i][0] = gauss_matrix.array[i][gauss_matrix.colsCount - 1] / gauss_matrix.array[i][i];
             }
